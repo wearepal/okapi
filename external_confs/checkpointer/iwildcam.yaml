@@ -1,0 +1,6 @@
+---
+defaults:
+  - /schema/checkpointer: base
+  - _self_
+monitor: "validate/OOD/F1-macro_all"
+mode: 'max'

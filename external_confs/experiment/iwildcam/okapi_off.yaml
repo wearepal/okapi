@@ -1,0 +1,42 @@
+# @package _global_
+
+# usage: +experiment=iwildcam/okapi_off
+
+defaults:
+    - override /alg: okapi_off
+    - override /dm: iwildcam/okapi
+    - override /backbone: iw/convnext
+    - override /predictor: fcn
+    - override /checkpointer: iwildcam
+    - override /logger: ds
+    - _self_
+
+dm:
+  train_batch_size_l: 8
+  train_batch_size_u: 8
+
+trainer:
+  max_steps: 120000
+  multiple_trainloader_mode: 'min_size'
+  val_check_interval: 5000
+  precision: 32
+
+alg:
+  lr: 1.e-4
+  fixed_caliper_max: 0.95
+  std_caliper: 0.2
+  temp_ps: 1.1
+  loss_u_fn: COSINE_FEAT
+  reweight: true
+
+  indices_artifact: match_indices:v117
+  artifact_project: predictive-analytics-lab/matching_ds
+
+  warmup_steps: 12000
+  scheduler_cls: torch.optim.lr_scheduler.CosineAnnealingLR
+  scheduler_kwargs:
+    T_max: ${ trainer.max_steps }
+    eta_min: 5e-7
+    
+logger:
+  group: okapi_offline_${alg.loss_u_fn}_temp_ps_${alg.temp_ps}_iwildcam

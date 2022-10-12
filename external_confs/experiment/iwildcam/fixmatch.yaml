@@ -1,0 +1,35 @@
+# @package _global_
+
+# usage: +experiment=iwildcam/fixmatch
+
+defaults:
+    - override /dm: iwildcam/fixmatch
+    - override /backbone: iwildcam/convnext
+    - override /predictor: fcn
+    - override /alg: fixmatch
+    - override /logger: ds
+    - override /checkpointer: iwildcam
+    - _self_
+
+dm: 
+  train_batch_size_l: 16
+  train_batch_size_u: 16
+
+trainer:
+  max_steps: 120000
+  multiple_trainloader_mode: 'min_size'
+  val_check_interval: 5000
+  accumulate_grad_batches: 1
+
+alg:
+  lr: 1.e-4
+  confidence_threshold: 0.95
+  loss_u_weight: 1.0
+  temperature: 1.0
+  scheduler_cls: torch.optim.lr_scheduler.CosineAnnealingLR
+  scheduler_kwargs:
+    T_max: ${ trainer.max_steps }
+    eta_min: 5.0e-7
+
+logger:
+  group: fixmatch_ds_ct_${alg.confidence_threshold}_temp_${alg.temperature}_iwildcam

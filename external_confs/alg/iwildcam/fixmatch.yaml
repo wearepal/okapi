@@ -1,0 +1,20 @@
+---
+defaults:
+  - /schema/alg: fixmatch
+  - defaults
+  - _self_
+model: 
+evaluator: 
+lr: 3e-05
+optimizer_cls: 'torch.optim.AdamW'
+optimizer_kwargs: null
+use_sam: false
+sam_rho: 0.05
+scheduler_cls: null
+scheduler_kwargs: null
+lr_sched_interval: step
+lr_sched_freq: 1
+batch_transforms: null
+confidence_threshold: 0.70
+loss_u_weight: 1.0
+temperature: 1.0

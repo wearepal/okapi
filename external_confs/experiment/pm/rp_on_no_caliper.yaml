@@ -1,0 +1,55 @@
+# @package _global_
+
+# usage: +experiment=iwildcam/fixmatch_wilds
+
+defaults:
+    - override /dm: poverty_map
+    - override /backbone: convnext
+    - override /predictor: fcn
+    - override /alg: realpatch_on
+    - override /logger: ds
+    - override /checkpointer: pm
+    - _self_
+
+backbone:
+  version: TINY
+  pretrained: true
+  in_channels: 8
+
+dm: 
+  training_mode: step
+  train_batch_size_l: 128
+  train_batch_size_u: 128
+  use_unlabeled: true
+
+trainer:
+  max_steps: 30000
+  multiple_trainloader_mode: 'min_size'
+  val_check_interval: 1000
+  precision: 32
+
+alg:
+  lr: 1e-4
+  loss_u_weight_end: 1.0
+  fixed_caliper_min: 0
+  fixed_caliper_max: 1
+  std_caliper: 1000000000
+  temp_ps: 1.0
+  reweight: true
+  normalize: false
+  loss_u_fn: L2_FEAT
+  temp_nnclr: 0.1
+  warmup_steps: 3000
+  ema_decay_start: 0.999
+  ema_decay_end: 0.999
+  ema_warmup_steps: 3000
+  mb_capacity: 65536
+  twoway_caliper: false
+  online_ps: true
+  scheduler_cls: torch.optim.lr_scheduler.CosineAnnealingLR
+  scheduler_kwargs:
+    T_max: ${ trainer.max_steps }
+    eta_min: 5e-7
+
+logger:
+  group: rp_on_${alg.loss_u_fn}_poverty_map

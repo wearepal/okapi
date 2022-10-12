@@ -1,0 +1,45 @@
+# @package _global_
+
+# usage: +experiment=iwildcam/okapi
+
+defaults:
+    - override /dm: iwildcam/okapi
+    - override /backbone: iw/convnext
+    - override /predictor: fcn
+    - override /alg: okapi
+    - override /checkpointer: iwildcam
+    - override /logger: ds
+    - _self_
+
+trainer:
+  max_steps: 120000
+  multiple_trainloader_mode: 'min_size'
+  val_check_interval: 5000
+  precision: 16
+
+alg:
+  lr: 1e-4
+  fixed_caliper_max: 0.95 
+  std_caliper: 0.2
+  temp_ps: 1.1
+  twoway_caliper: true
+  reweight: true
+  online_ps: true
+
+  loss_u_weight_end: 1.0
+  loss_u_fn: L2_FEAT
+  normalize: true
+  warmup_steps: 12000
+
+  ema_decay_start: 0.999
+  ema_decay_end: 0.999
+  ema_warmup_steps: ${trainer.max_steps}
+  mb_capacity: 16384
+
+  scheduler_cls: torch.optim.lr_scheduler.CosineAnnealingLR
+  scheduler_kwargs:
+    T_max: ${ trainer.max_steps }
+    eta_min: 5e-7
+
+logger:
+  group: okapi_${alg.loss_u_fn}_binary_${alg.binary}_k_${alg.k}_temp_ps_${alg.temp_ps}_normalize_${alg.normalize}_iwildcam

@@ -1,0 +1,36 @@
+---
+defaults:
+  - iwildcam
+  - _self_
+
+train_batch_size_l: 24
+training_mode: step
+target_resolution: 224
+
+train_transforms_l:
+  _target_: torchvision.transforms.Compose
+  transforms:
+    - _target_: torchvision.transforms.Resize
+      size: ${ target_resolution }
+    - _target_: torchvision.transforms.CenterCrop
+      size: ${ target_resolution }
+    - _target_: torchvision.transforms.RandomHorizontalFlip
+    - _target_: torchvision.transforms.RandAugment
+      num_ops: 2
+    - _target_: torchvision.transforms.ToTensor
+    - _target_: torchvision.transforms.Normalize
+      mean: [0.48145466, 0.4578275, 0.40821073]
+      std: [0.26862954, 0.26130258, 0.27577711]
+
+
+test_transforms: 
+  _target_: torchvision.transforms.Compose
+  transforms: 
+    - _target_: torchvision.transforms.Resize
+      size: ${ target_resolution }
+    - _target_: torchvision.transforms.CenterCrop
+      size: ${ target_resolution }
+    - _target_: torchvision.transforms.ToTensor
+    - _target_: torchvision.transforms.Normalize
+      mean: [0.48145466, 0.4578275, 0.40821073]
+      std: [0.26862954, 0.26130258, 0.27577711]

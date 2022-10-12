@@ -1,0 +1,22 @@
+---
+defaults:
+  - /schema/model: regnet
+  - defaults
+  - _self_
+dataset: 
+depth: 27
+w_0: 1744
+w_a: 620.83
+w_m: 2.52
+group_width: 1010
+bottleneck_multiplier: 1.0
+stem_type: SIMPLE_STEM_IN
+stem_width: 32
+block_type: RES_BOTTLENECK_BLOCK
+activation: RELU
+use_se: true
+se_ratio: 0.25
+bn_epsilon: 1e-05
+bn_momentum: 0.1
+features_only: false
+checkpoint: null

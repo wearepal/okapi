@@ -1,0 +1,29 @@
+# @package _global_
+
+# usage: +experiment=pm/erm_ds
+
+defaults:
+    - override /dm: pm/erm
+    - override /backbone: pm/convnext
+    - override /predictor: fcn
+    - override /alg: erm
+    - override /logger: ds
+    - override /checkpointer: pm
+    - _self_
+
+trainer:
+  max_steps: 30000
+  multiple_trainloader_mode: 'min_size'
+  val_check_interval: 1000
+  precision: 16
+
+alg:
+  lr: 1.e-4
+  optimizer_cls: 'torch.optim.AdamW'
+  scheduler_cls: torch.optim.lr_scheduler.CosineAnnealingLR
+  scheduler_kwargs:
+    T_max: ${ trainer.max_steps }
+    eta_min: 5.0e-7
+
+logger:
+  group: erm_poverty_map

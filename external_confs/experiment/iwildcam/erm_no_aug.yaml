@@ -1,0 +1,62 @@
+# @package _global_
+
+# usage: +experiment=iwildcam/erm_no_aug
+
+defaults:
+    - override /dm: iwildcam
+    - override /backbone: convnext
+    - override /predictor: fcn
+    - override /alg: erm
+    - override /logger: ds
+    - override /checkpointer: iwildcam
+    - _self_
+
+backbone:
+  version: TINY
+  pretrained: true
+
+alg:
+  lr: 1.e-4
+  scheduler_cls: torch.optim.lr_scheduler.CosineAnnealingLR
+  scheduler_kwargs:
+    T_max: ${ trainer.max_steps }
+    eta_min: 5e-7
+
+trainer:
+  max_steps: 120000
+  multiple_trainloader_mode: 'min_size'
+  val_check_interval: 5000
+  precision: 16
+
+dm:
+  groupby_fields: ['location']
+  train_batch_size_l: 24
+  training_mode: step
+
+  train_transforms_l: 
+    _target_: torchvision.transforms.Compose
+    transforms: 
+      - _target_: torchvision.transforms.Resize
+        size: ${ dm.target_resolution }
+      - _target_: torchvision.transforms.CenterCrop
+        size: ${ dm.target_resolution }
+      - _target_: torchvision.transforms.ToTensor
+      - _target_: torchvision.transforms.Normalize
+        mean: [ 0.485, 0.456, 0.406 ]
+        std: [ 0.229, 0.224, 0.225 ]
+
+  test_transforms: 
+    _target_: torchvision.transforms.Compose
+    transforms: 
+      - _target_: torchvision.transforms.Resize
+        size: ${ dm.target_resolution }
+      - _target_: torchvision.transforms.CenterCrop
+        size: ${ dm.target_resolution }
+      - _target_: torchvision.transforms.ToTensor
+      - _target_: torchvision.transforms.Normalize
+        mean: [ 0.485, 0.456, 0.406 ]
+        std: [ 0.229, 0.224, 0.225 ]
+
+logger:
+  job_type: iwildcam
+  group: erm_no_aug_iwildcam

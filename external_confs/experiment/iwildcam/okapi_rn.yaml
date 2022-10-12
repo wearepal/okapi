@@ -1,0 +1,13 @@
+# @package _global_
+
+# usage: +experiment=iwildcam/okapi_rn
+
+defaults:
+    - iwildcam/okapi
+    - override /backbone: resnet
+    - _self_
+
+backbone:
+  version: RN50
+  pretrained: true
+

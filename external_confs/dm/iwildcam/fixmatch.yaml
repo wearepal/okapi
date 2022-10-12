@@ -1,0 +1,67 @@
+---
+defaults:
+  - iwildcam
+  - _self_
+
+training_mode: step
+use_unlabeled: true
+target_resolution: 448
+train_batch_size_l: 16
+train_batch_size_u: 16
+
+train_transforms_l: 
+  _target_: torchvision.transforms.Compose
+  transforms: 
+    - _target_: torchvision.transforms.Resize
+      size: ${ dm.target_resolution }
+    - _target_: torchvision.transforms.CenterCrop
+      size: ${ dm.target_resolution }
+    - _target_: torchvision.transforms.RandomHorizontalFlip
+    - _target_: torchvision.transforms.RandAugment
+      num_ops: 2
+    - _target_: torchvision.transforms.ToTensor
+    - _target_: torchvision.transforms.Normalize
+      mean: [ 0.485, 0.456, 0.406 ]
+      std: [ 0.229, 0.224, 0.225 ]
+
+train_transforms_u: 
+  _target_: src.transforms.FixMatchTransform
+  shared_transform_start:
+    _target_: torchvision.transforms.Compose
+    transforms:
+      - _target_: torchvision.transforms.Resize
+        size: ${ dm.target_resolution }
+  strong_transform: 
+    _target_: torchvision.transforms.Compose
+    transforms:
+      - _target_: torchvision.transforms.RandomHorizontalFlip
+      - _target_: torchvision.transforms.RandomCrop
+        size: ${ dm.target_resolution }
+      - _target_: src.transforms.FixMatchRandAugment
+        num_ops: 2
+  weak_transform:
+    _target_: torchvision.transforms.Compose
+    transforms:
+      - _target_: torchvision.transforms.RandomHorizontalFlip
+      - _target_: torchvision.transforms.RandomCrop
+        size: ${ dm.target_resolution }
+  shared_transform_end:
+    _target_: torchvision.transforms.Compose
+    transforms: 
+      - _target_: torchvision.transforms.ToTensor
+      - _target_: torchvision.transforms.Normalize
+        mean: [ 0.485, 0.456, 0.406 ]
+        std: [ 0.229, 0.224, 0.225 ]
+
+test_transforms: 
+  _target_: torchvision.transforms.Compose
+  transforms: 
+    - _target_: torchvision.transforms.Resize
+      size: ${ dm.target_resolution }
+    - _target_: torchvision.transforms.CenterCrop
+      size: ${ dm.target_resolution }
+    - _target_: torchvision.transforms.ToTensor
+    - _target_: torchvision.transforms.Normalize
+      mean: [ 0.485, 0.456, 0.406 ]
+      std: [ 0.229, 0.224, 0.225 ]
+

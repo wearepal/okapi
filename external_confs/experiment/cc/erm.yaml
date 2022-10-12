@@ -1,0 +1,48 @@
+# @package _global_
+
+# usage: +experiment=cc/erm_wilds
+# reference: https://worksheets.codalab.org/worksheets/0xff0ec35397fc44319f9a4ef8071056ea
+
+defaults:
+    - override /dm: civil_comments
+    - override /backbone: dbert
+    - override /predictor: fcn
+    - override /alg: erm
+    - override /logger: ds
+    - override /checkpointer: cc
+    - _self_
+
+backbone:
+  version: BASE_UNC
+
+predictor:
+  num_hidden: 1
+  dropout_prob: 0.1
+  activation: GELU
+  norm: LN
+
+dm:
+  train_batch_size_l: 48
+  training_mode: step
+  groupby_fields: ['y']
+  sampling_groups: ${ dm.groupby_fields }
+  max_token_length: 300
+  sampling_method: weighted
+  seed: 0
+
+trainer:
+  max_steps: 30000
+  multiple_trainloader_mode: 'min_size'
+  val_check_interval: 1000
+  precision: 16
+  gradient_clip_val: 1.0
+
+alg:
+  lr: 4.8155734000762916e-5
+  scheduler_cls: torch.optim.lr_scheduler.CosineAnnealingLR
+  scheduler_kwargs:
+    T_max: ${ trainer.max_steps }
+    eta_min: 5.0e-7
+
+logger:
+  group: erm_civil_comments

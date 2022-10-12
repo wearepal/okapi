@@ -1,0 +1,11 @@
+# usage: hydra/launcher=slurm_kyiv
+
+defaults:
+  - submitit_slurm
+
+partition: kyiv
+cpus_per_task: 24  # on kyiv, we have 24 CPUs per GPU
+timeout_min: 99999  # 99999 minutes = a few months
+
+additional_parameters:
+  gres: "gpu:1"  # 1 GPU

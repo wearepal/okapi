@@ -1,0 +1,8 @@
+---
+defaults:
+  - /schema/backbone: convnext
+  - _self_
+in_channels: 8
+pretrained: true
+version: TINY
+checkpoint_path: ''

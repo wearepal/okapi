@@ -1,0 +1,36 @@
+# @package _global_
+
+# usage: +experiment=pm/fixmatch
+
+defaults:
+    - override /dm: pm/fixmatch
+    - override /backbone: pm/convnext
+    - override /predictor: fcn
+    - override /alg: fixmatch
+    - override /logger: ds
+    - override /checkpointer: pm
+    - _self_
+
+trainer:
+  max_steps: 30000
+  multiple_trainloader_mode: 'min_size'
+  val_check_interval: 1000
+  precision: 16
+
+alg:
+  lr: 1.e-4
+  test_on_best: false
+  use_test_data: false
+  confidence_threshold: 0.95
+  loss_u_weight: 1.0
+  soft: false
+  optimizer_cls: 'torch.optim.AdamW'
+  scheduler_cls: torch.optim.lr_scheduler.CosineAnnealingLR
+  scheduler_kwargs:
+    T_max: ${ trainer.max_steps }
+    eta_min: 5e-7
+
+logger:
+  group: fixmatch_ct_${alg.confidence_threshold}_loss_u_weight_${alg.loss_u_weight}_poverty_map
+
+

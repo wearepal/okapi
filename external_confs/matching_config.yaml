@@ -1,0 +1,20 @@
+data: iwildcam
+feature_artifact: 
+metadata_labeled_path: 
+metadata_unlabeled_path: 
+
+fixed_caliper_min: 0.1
+fixed_caliper_max: 0.9
+std_caliper: 0.2
+ps_train: 0.1
+ps_solver: "lbfgs"
+temperature: 0.7
+c: 1 # C argument for PS prediction regression model
+
+apply_caliper_to_control_group: False
+reweight: True
+normalize: False
+gpu: ""
+number_examples: 20
+wandb_group: iwildcam-features:v1
+save_torch: False

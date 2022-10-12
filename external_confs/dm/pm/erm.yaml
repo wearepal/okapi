@@ -1,0 +1,12 @@
+---
+defaults:
+  - /schema/dm: poverty_map
+  - _self_
+
+fold: A
+train_batch_size_l: 128
+training_mode: step
+use_unlabeled: false
+groupby_fields: ['country']
+train_transforms_l: 
+  _target_: src.transforms.Identity

@@ -1,0 +1,64 @@
+# @package _global_
+
+# usage: +experiment=pm/okapi_no_fixed_caliper
+
+defaults:
+    - override /dm: poverty_map
+    - override /backbone: convnext
+    - override /predictor: fcn
+    - override /alg: okapi
+    - override /logger: ds
+    - override /checkpointer: pm
+    - _self_
+
+backbone:
+  version: TINY
+  pretrained: true
+  in_channels: 8
+
+dm: 
+  training_mode: step
+  train_batch_size_l: 64
+  train_batch_size_u: 64
+  use_unlabeled: true
+  groupby_fields: ['country']
+  train_transforms_l: 
+    _target_: src.transforms.Identity
+  train_transforms_u: 
+    _target_: src.transforms.Identity
+
+
+trainer:
+  max_steps: 30000
+  multiple_trainloader_mode: 'min_size'
+  val_check_interval: 1000
+  precision: 16
+
+alg:
+  lr: 1e-4
+  use_test_data: false
+  binary: true
+  loss_u_weight_end: 1.0
+  fixed_caliper_max: 1.0
+  std_caliper: 0.2
+  temp_ps: 1
+  k: 5
+  reweight: true
+  normalize: true
+  loss_u_fn: L2_FEAT
+  temp_nnclr: 0.1
+  warmup_steps: 3000
+  ema_decay_start: 0.996
+  ema_decay_end: 1.0
+  ema_warmup_steps: ${ trainer.max_steps }
+  mb_capacity: 65536
+  twoway_caliper: true
+  online_ps: true
+  scheduler_cls: torch.optim.lr_scheduler.CosineAnnealingLR
+  scheduler_kwargs:
+    T_max: ${ trainer.max_steps }
+    eta_min: 5e-7
+
+logger:
+  group: okapi_${alg.loss_u_fn}_binary_${alg.binary}_k_${alg.k}_temp_ps_${alg.temp_ps}_normalize_${alg.normalize}_poverty_map_no_fixed_caliper
+  tags: [ablation, poverty_map, okapi]

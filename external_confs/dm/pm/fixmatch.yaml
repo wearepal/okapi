@@ -1,0 +1,19 @@
+---
+defaults:
+  - /schema/dm: poverty_map
+  - _self_
+
+fold: A
+train_batch_size_l: 64
+train_batch_size_u: 64
+training_mode: step
+use_unlabeled: true
+groupby_fields: ['country']
+train_transforms_l: 
+  _target_: src.transforms.Identity
+train_transforms_u: 
+  _target_: src.transforms.FixMatchTransform
+  strong_transform: 
+    _target_: src.transforms.RandAugmentPM
+  weak_transform:
+    _target_: torchvision.transforms.RandomHorizontalFlip

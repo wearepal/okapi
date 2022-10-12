@@ -1,0 +1,29 @@
+# @package _global_
+
+# usage: +experiment=iwildcam/erm_aug
+
+defaults:
+    - override /dm: iwildcam/erm_aug
+    - override /backbone: iw/convnext
+    - override /predictor: fcn
+    - override /alg: erm
+    - override /logger: ds
+    - override /checkpointer: iwildcam
+    - _self_
+
+alg:
+  lr: 1.e-4
+  scheduler_cls: torch.optim.lr_scheduler.CosineAnnealingLR
+  scheduler_kwargs:
+    T_max: ${ trainer.max_steps }
+    eta_min: 5e-7
+
+trainer:
+  max_steps: 120000
+  multiple_trainloader_mode: 'min_size'
+  val_check_interval: 5000
+  precision: 16
+
+logger:
+  job_type: iwildcam
+  group: erm_aug_iwildcam

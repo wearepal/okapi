@@ -1,0 +1,8 @@
+# @package _global_
+
+# usage: +experiment=pm/okapi_rn
+
+defaults:
+    - pm/okapi
+    - override /backbone: pm/resnet
+    - _self_

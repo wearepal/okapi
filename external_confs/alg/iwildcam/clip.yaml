@@ -1,0 +1,25 @@
+---
+defaults:
+  - /schema/alg: erm
+  - defaults
+  - _self_
+model: 
+evaluator: 
+lr: 5e-05
+optimizer_cls: 'torch.optim.AdamW'
+optimizer_kwargs: null
+use_sam: false
+sam_rho: 0.05
+scheduler_cls: null
+scheduler_kwargs: null
+lr_sched_interval: step
+lr_sched_freq: 1
+loss_fn: null
+batch_transforms:
+  - _target_: ranzen.torch.transforms.RandomCutMix
+    alpha: 1.0
+    num_classes: 182
+  - _target_: ranzen.torch.transforms.RandomMixUp.with_beta_dist
+    alpha: 0.2
+    num_classes: 182
+    inplace: true

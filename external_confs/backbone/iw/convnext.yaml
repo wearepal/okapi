@@ -1,0 +1,7 @@
+---
+defaults:
+  - /schema/backbone: convnext
+  - _self_
+version: TINY
+in_channels: 3
+pretrained: true

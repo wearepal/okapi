@@ -1,0 +1,10 @@
+dm: poverty_map
+unlabel_data: train # data split of the unlabel set to be used for matching
+artifact: povertymap_erm_convnext_fcn:v0
+model: None
+# src.models.backbones.vision.ConvNeXt
+model_version: None
+# convnext_base_in22k
+
+wandb_group: poverty_erm_features_fold_a
+gpu: 3

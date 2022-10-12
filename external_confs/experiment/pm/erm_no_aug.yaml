@@ -1,0 +1,21 @@
+# @package _global_
+
+# usage: +experiment=pm/erm_no_aug
+
+defaults:
+   - pm/erm_ds
+    - _self_
+
+dm:
+  fold: A
+  train_batch_size_l: 128
+  training_mode: step
+  groupby_fields: ['country']
+  train_transforms_l: 
+    _target_: src.transforms.Identity
+  train_transforms_u: 
+    _target_: src.transforms.Identity
+
+logger:
+  group: erm_no_aug_poverty_map
+  # group: erm_no_aug_poverty_map_fold_${dm.fold}

@@ -1,0 +1,17 @@
+---
+defaults:
+  - /schema/logger: base
+  - _self_
+name: null
+save_dir: ".wandb"
+offline: false
+id: null
+anonymous: null
+version: null
+log_model: false
+experiment: null
+prefix: ''
+entity:
+project: okapi
+group: null
+tags: []

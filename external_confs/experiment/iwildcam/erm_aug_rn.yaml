@@ -1,0 +1,12 @@
+# @package _global_
+
+# usage: +experiment=iwildcam/erm_aug_rn
+
+defaults:
+    - iwildcam/erm_aug
+    - override /backbone: resnet
+    - _self_
+
+backbone:
+  version: RN50
+  pretrained: true

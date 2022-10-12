@@ -1,0 +1,41 @@
+# @package _global_
+
+# usage: +experiment=pm/okapi_off
+
+defaults:
+    - override /dm: pm/okapi
+    - override /backbone: pm/convnext
+    - override /predictor: fcn
+    - override /alg: okapi_off
+    - override /logger: ds
+    - override /checkpointer: pm
+    - _self_
+
+dm:
+  train_batch_size_l: 32
+  train_batch_size_u: 32
+
+alg:
+  lr: 1e-4
+  loss_u_fn: COSINE_FEAT
+  fixed_caliper_max: 0.9
+  twoway_caliper: false
+  reweight: false
+  std_caliper: 0.6
+  temp_ps: 0.7
+
+  artifact_project: predictive-analytics-lab/dist-shift
+  encoder_artifact: povertymap_erm_convnext_fcn:v19
+  scheduler_cls: torch.optim.lr_scheduler.CosineAnnealingLR
+  scheduler_kwargs:
+    T_max: ${ trainer.max_steps }
+    eta_min: 5e-7
+    
+trainer:
+  max_steps: 30000
+  multiple_trainloader_mode: 'min_size'
+  val_check_interval: 1000
+  precision: 16
+
+logger:
+  group: okapi_offline_${alg.loss_u_fn}_poverty_map

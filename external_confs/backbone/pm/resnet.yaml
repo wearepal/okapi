@@ -1,0 +1,7 @@
+---
+defaults:
+  - /schema/backbone: resnet
+  - _self_
+version: RN18
+in_channels: 8
+pretrained: true
