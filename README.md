@@ -54,7 +54,7 @@ one can then override any desired configs/arguments with the syntax
 
 
 ## Citation
-```
+```bibtex
 @article{bartlett2022okapi,
   title={Okapi: Generalising Better by Making Statistical Matches Match},
   author={Bartlett, Myles and Romiti, Sara and Sharmanska, Viktoriia and Quadrianto, Novi},
@@ -62,3 +62,4 @@ one can then override any desired configs/arguments with the syntax
   volume={35},
   year={2022}
 }
+```
